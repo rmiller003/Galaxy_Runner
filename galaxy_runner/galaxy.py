@@ -16,7 +16,7 @@ from kivy.graphics.vertex_instructions import Line, Quad, Triangle
 from kivy.properties import NumericProperty, Clock, ObjectProperty, StringProperty
 from kivy.uix.widget import Widget
 
-Builder.load_file("menu.kv")
+Builder.load_file("galaxy_runner/menu.kv")
 
 
 class MainWidget(RelativeLayout):
@@ -61,7 +61,6 @@ class MainWidget(RelativeLayout):
     score_txt = StringProperty()
 
     sound_begin = None
-    sound_begin = None
     sound_galaxy = None
     sound_gameover_impact = None
     sound_gameover_voice = None
@@ -70,7 +69,6 @@ class MainWidget(RelativeLayout):
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
-        # print("INIT W:" + str(self.width) + " H:" + str(self.height))
         self.init_audio()
         self.init_vertical_lines()
         self.init_horizontal_lines()
@@ -87,12 +85,12 @@ class MainWidget(RelativeLayout):
         self.sound_galaxy.play()
 
     def init_audio(self):
-        self.sound_begin = SoundLoader.load("audio/begin.wav")
-        self.sound_galaxy = SoundLoader.load("audio/galaxy.wav")
-        self.sound_gameover_impact = SoundLoader.load("audio/gameover_impact.wav")
-        self.sound_gameover_voice = SoundLoader.load("audio/gameover_voice.wav")
-        self.sound_music1 = SoundLoader.load("audio/music1.wav")
-        self.sound_restart = SoundLoader.load("audio/restart.wav")
+        self.sound_begin = SoundLoader.load("venv/audio/begin.wav")
+        self.sound_galaxy = SoundLoader.load("venv/audio/galaxy.wav")
+        self.sound_gameover_impact = SoundLoader.load("venv/audio/gameover_impact.wav")
+        self.sound_gameover_voice = SoundLoader.load("venv/audio/gameover_voice.wav")
+        self.sound_music1 = SoundLoader.load("venv/audio/music1.wav")
+        self.sound_restart = SoundLoader.load("venv/audio/restart.wav")
 
         self.sound_music1.volume = 1
         self.sound_begin.volume = .25
@@ -181,7 +179,6 @@ class MainWidget(RelativeLayout):
             last_x = last_coordinates[0]
             last_y = last_coordinates[1] + 1
 
-        print("foo1")
 
         for i in range(len(self.tiles_coordinates), self.NB_TILES):
             r = random.randint(0, 2)
@@ -209,7 +206,6 @@ class MainWidget(RelativeLayout):
 
             last_y += 1
 
-        print("foo2")
 
     def init_vertical_lines(self):
         with self.canvas:
@@ -296,12 +292,11 @@ class MainWidget(RelativeLayout):
                 self.current_y_loop += 1
                 self.score_txt = "SCORE: " + str(self.current_y_loop)
                 self.generate_tiles_coordinates()
-                print("loop : " + str(self.current_y_loop))
 
             speed_x = self.current_speed_x * self.width / 100
             self.current_offset_x += speed_x * time_factor
 
-        if not self.check_ship_collision() and not self.state_game_over:
+        if self.check_ship_collision() and not self.state_game_over:
             self.state_game_over = True
             self.menu_title = "G  A  M  E    O  V  E  R"
             self.menu_button_title = "RESTART"
@@ -309,7 +304,6 @@ class MainWidget(RelativeLayout):
             self.sound_music1.stop()
             self.sound_gameover_impact.play()
             Clock.schedule_once(self.play_game_over_voice_sound, 3)
-            print("GAME OVER")
 
     def play_game_over_voice_sound(self, dt):
         if self.state_game_over:
