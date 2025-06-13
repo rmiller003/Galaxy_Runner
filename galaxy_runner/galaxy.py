@@ -106,6 +106,8 @@ class MainWidget(RelativeLayout):
         self.current_offset_x = 0
         self.tiles_coordinates = []
         self.score_txt = "SCORE: " + str(self.current_y_loop)
+        self.menu_title = "G A L A X Y   R U N N E R "
+        self.menu_button_title = "START"
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
         self.state_game_over = False
@@ -162,7 +164,7 @@ class MainWidget(RelativeLayout):
 
     def pre_fill_tiles_coordinates(self):
         for i in range(0, 15):
-            self.tiles_coordinates.append((0, i))
+            self.tiles_coordinates.append((0, i + 2)) # Start tiles at y=2 instead of y=0
 
     def generate_tiles_coordinates(self):
         last_x = 0
