@@ -69,6 +69,7 @@ class MainWidget(RelativeLayout):
 
     def __init__(self, **kwargs):
         super(MainWidget, self).__init__(**kwargs)
+        self.collision_grace_frames = 0
         self.init_audio()
         self.init_vertical_lines()
         self.init_horizontal_lines()
@@ -111,6 +112,7 @@ class MainWidget(RelativeLayout):
         self.pre_fill_tiles_coordinates()
         self.generate_tiles_coordinates()
         self.state_game_over = False
+        self.collision_grace_frames = 10 # Grace period of 10 frames
 
     def is_desktop(self):
         if platform in ('linux', 'windows', 'macosx'):
@@ -285,6 +287,8 @@ class MainWidget(RelativeLayout):
         self.update_ship()
 
         if not self.state_game_over and self.state_game_has_started:
+            if self.collision_grace_frames > 0:
+                self.collision_grace_frames -= 1
             speed_y = self.SPEED * self.height / 100
             self.current_offset_y += speed_y * time_factor
 
@@ -298,7 +302,7 @@ class MainWidget(RelativeLayout):
             speed_x = self.current_speed_x * self.width / 100
             self.current_offset_x += speed_x * time_factor
 
-        if self.check_ship_collision() and not self.state_game_over:
+        if self.collision_grace_frames <= 0 and self.check_ship_collision() and not self.state_game_over:
             self.state_game_over = True
             self.menu_title = "G  A  M  E    O  V  E  R"
             self.menu_button_title = "RESTART"
